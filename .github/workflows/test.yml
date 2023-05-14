@@ -1,0 +1,21 @@
+name: Run test
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - '*'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Install deps
+        run: yarn install
+
+      - name: Test
+        run: yarn test
+
+      - name: End message
+        run: echo 'Done Test'
