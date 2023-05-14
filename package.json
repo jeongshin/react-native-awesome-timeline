@@ -48,6 +48,7 @@
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-conventional": "^17.3.0",
     "@expo/webpack-config": "^0.17.2",
+    "@faker-js/faker": "^8.0.0",
     "@jest/types": "^27.5.1",
     "@react-native-community/eslint-config": "^3.2.0",
     "@release-it/conventional-changelog": "^5.1.1",

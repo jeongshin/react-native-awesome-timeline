@@ -9,6 +9,7 @@ import {
   ViewToken,
   ViewabilityConfig,
   FlatListProps,
+  TextStyle,
 } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 
@@ -63,16 +64,22 @@ export interface TimelineProps<T>
 
   /**
    * renderDivider function
+   *
+   * **recommend pure function with useCallback**
    */
   renderDivider?: (date: Date) => ReactElement;
 
   /**
    * renderLabel function
+   *
+   * **recommend pure function with useCallback**
    */
   renderLabel?: (data: T) => ReactElement;
 
   /**
    * renderItem function
+   *
+   * **recommend pure function with useCallback**
    */
   renderItem: ListRenderItem<T>;
 
@@ -84,6 +91,8 @@ export interface TimelineProps<T>
   /**
    * for rendering optimization
    * exact size of item & divider
+   *
+   * **recommend memoize with useMemo**
    */
   itemSizeForOptimization?: TimelineItemSizeConfig;
 
@@ -130,7 +139,39 @@ export interface TimelineProps<T>
   labelPaddingColor?: string;
 
   /**
+   * label padding color
+   * @default #888888
+   */
+  labelColor?: string;
+
+  /**
+   * flag to show horizontal line at divider
+   * @default true
+   */
+  showsHorizontalDivider?: boolean;
+
+  /**
+   * horizontal divider thickness in px
+   * @default 2px
+   */
+  horizontalDividerThickness?: number;
+
+  /**
+   * divider text style
+   */
+  dividerTextStyle?: StyleProp<TextStyle>;
+
+  /**
+   * format text rather than 2023-04-05 format
+   *
+   * **recommend pure function with useCallback**
+   */
+  dividerTextFormatter?: (date: Date) => string;
+
+  /**
    * animation configuration
+   *
+   * **recommend memoize with useMemo**
    */
   animationConfig?: TimelineAnimationConfig;
 }
@@ -151,12 +192,17 @@ function Timeline<T extends TimelineItem>({
   labelTopOffset = 10,
   labelPadding = 4,
   labelPaddingColor = '#ffffff',
+  labelColor = '#888888',
   onViewableItemsChanged,
   itemVisiblePercentThreshold,
   waitForInteraction,
   minimumViewTime,
   animationConfig,
   refCallback,
+  horizontalDividerThickness = 2,
+  showsHorizontalDivider = true,
+  dividerTextStyle,
+  dividerTextFormatter,
   ...props
 }: TimelineProps<T>) {
   const items: (T | Date)[] = useMemo(
@@ -187,10 +233,13 @@ function Timeline<T extends TimelineItem>({
               renderDivider(item)
             ) : (
               <DateDivider
+                horizontalDividerThickness={horizontalDividerThickness}
+                showsHorizontalDivider={showsHorizontalDivider}
                 height={itemSizeForOptimization?.divider}
                 date={item}
                 lineColor={lineColor}
-                lineThickness={lineThickness}
+                dividerTextFormatter={dividerTextFormatter}
+                dividerTextStyle={dividerTextStyle}
               />
             )}
           </AnimateWrapper>
@@ -219,7 +268,7 @@ function Timeline<T extends TimelineItem>({
               ) : (
                 <View
                   style={{
-                    backgroundColor: lineColor,
+                    backgroundColor: labelColor,
                     width: '100%',
                     height: '100%',
                     borderRadius: width,
@@ -246,6 +295,9 @@ function Timeline<T extends TimelineItem>({
       labelTopOffset,
       labelPaddingColor,
       labelPadding,
+      labelColor,
+      dividerTextFormatter,
+      dividerTextStyle,
     ],
   );
 
@@ -271,7 +323,7 @@ function Timeline<T extends TimelineItem>({
       const offset: number =
         data?.reduce<number>((acc, curr, idx) => {
           return (
-            acc + (idx <= index ? (curr instanceof Date ? divider : item) : 0)
+            acc + (idx < index ? (curr instanceof Date ? divider : item) : 0)
           );
         }, 0) || 0;
 
@@ -284,6 +336,13 @@ function Timeline<T extends TimelineItem>({
     [!!itemSizeForOptimization],
   );
 
+  const handleViewableItemChange: NonNullable<
+    FlatListProps<Date | T>['onViewableItemsChanged']
+  > = useCallback((event) => {
+    sharedViewItems.value = event.viewableItems;
+    onViewableItemsChanged && onViewableItemsChanged(event);
+  }, []);
+
   return (
     <FlatList
       {...props}
@@ -292,10 +351,7 @@ function Timeline<T extends TimelineItem>({
       data={items}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
-      onViewableItemsChanged={(event) => {
-        sharedViewItems.value = event.viewableItems;
-        onViewableItemsChanged && onViewableItemsChanged(event);
-      }}
+      onViewableItemsChanged={handleViewableItemChange}
       getItemLayout={itemSizeForOptimization ? getItemLayout : undefined}
       viewabilityConfig={{
         itemVisiblePercentThreshold: itemVisiblePercentThreshold ?? 10,

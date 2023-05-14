@@ -1,14 +1,32 @@
 import React from 'react';
-import { View, useWindowDimensions } from 'react-native';
+import {
+  View,
+  useWindowDimensions,
+  Text,
+  StyleProp,
+  TextStyle,
+  StyleSheet,
+} from 'react-native';
 
 interface Props {
   lineColor: string;
-  lineThickness: number;
   date: Date;
   height: number | undefined;
+  horizontalDividerThickness: number;
+  showsHorizontalDivider: boolean;
+  dividerTextStyle?: StyleProp<TextStyle>;
+  dividerTextFormatter?: (date: Date) => string;
 }
 
-function DateDivider({ lineColor, lineThickness, height = 50 }: Props) {
+function DateDivider({
+  lineColor,
+  height = 50,
+  date,
+  showsHorizontalDivider,
+  horizontalDividerThickness,
+  dividerTextStyle,
+  dividerTextFormatter,
+}: Props) {
   const { width } = useWindowDimensions();
   return (
     <View
@@ -18,13 +36,29 @@ function DateDivider({ lineColor, lineThickness, height = 50 }: Props) {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-      <View
-        style={{
-          width,
-          height: lineThickness,
-          backgroundColor: lineColor,
-        }}
-      />
+      {showsHorizontalDivider && (
+        <View
+          style={{
+            width,
+            height: horizontalDividerThickness,
+            backgroundColor: lineColor,
+            position: 'absolute',
+          }}
+        />
+      )}
+      <Text
+        style={StyleSheet.flatten([
+          {
+            color: '#888888',
+            padding: 12,
+            backgroundColor: '#ffffff',
+          },
+          dividerTextStyle,
+        ])}>
+        {dividerTextFormatter
+          ? dividerTextFormatter(date)
+          : `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`}
+      </Text>
     </View>
   );
 }
