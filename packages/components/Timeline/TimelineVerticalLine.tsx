@@ -1,15 +1,17 @@
 import React from 'react';
 import { View, useWindowDimensions } from 'react-native';
 
-import { toPxUnit } from './utils';
+import { toPxUnit } from '../../utils';
 
 interface Props {
+  testID?: string;
   lineThickness: number;
   labelContentsWidth: number | string;
   lineColor: string;
 }
 
 const TimelineVerticalLine = ({
+  testID,
   labelContentsWidth,
   lineColor,
   lineThickness,
@@ -18,6 +20,7 @@ const TimelineVerticalLine = ({
 
   return (
     <View
+      testID={testID}
       style={{
         width: lineThickness,
         height: '100%',

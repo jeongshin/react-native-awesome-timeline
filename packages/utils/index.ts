@@ -11,3 +11,16 @@ export function toPxUnit(size: number | string, parent: number): number {
   }
   return size;
 }
+
+export function getAllDates(startDate: Date, endDate: Date) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  const dates = [];
+
+  for (let date = start; date <= end; date.setDate(date.getDate() + 1)) {
+    dates.push(new Date(date));
+  }
+
+  return dates;
+}

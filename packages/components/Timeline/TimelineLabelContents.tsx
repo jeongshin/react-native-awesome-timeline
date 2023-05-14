@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { View, useWindowDimensions } from 'react-native';
 
 import TimelineVerticalLine from './TimelineVerticalLine';
-import { toPxUnit } from './utils';
+import { toPxUnit } from '../../utils';
 
 interface Props {
   children?: ReactNode;
@@ -11,6 +11,7 @@ interface Props {
   labelSize: number | string;
   labelTopOffset: number;
   lineColor: string;
+  testID?: string;
 }
 
 function TimelineLabelContents({
@@ -20,6 +21,7 @@ function TimelineLabelContents({
   labelSize,
   labelTopOffset,
   lineColor,
+  testID,
 }: Props) {
   const { width } = useWindowDimensions();
 
@@ -35,6 +37,7 @@ function TimelineLabelContents({
         lineColor={lineColor}
       />
       <View
+        testID={testID}
         style={{
           position: 'absolute',
           top: labelTopOffset,

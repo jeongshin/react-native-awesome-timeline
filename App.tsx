@@ -4,6 +4,7 @@ import { Text, SafeAreaView, View, ListRenderItem } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { MemoizedTimeline, TimelineType } from './packages';
+import { getAllDates } from './packages/utils';
 
 export default function App() {
   const [data] = useState(() =>
@@ -46,17 +47,4 @@ export default function App() {
       </SafeAreaView>
     </SafeAreaProvider>
   );
-}
-
-function getAllDates(startDate: Date, endDate: Date) {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-
-  const dates = [];
-
-  for (let date = start; date <= end; date.setDate(date.getDate() + 1)) {
-    dates.push(new Date(date));
-  }
-
-  return dates;
 }

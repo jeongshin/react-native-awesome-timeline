@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { View, useWindowDimensions, StyleSheet } from 'react-native';
 
-import { toPxUnit } from './utils';
+import { toPxUnit } from '../../utils';
 
 interface Props {
   size: number | string;

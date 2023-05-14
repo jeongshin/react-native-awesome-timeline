@@ -335,7 +335,7 @@ export function generateTimelineItems<T extends { date: Date | string }>(
   }, []);
 }
 
-function isSameBy({
+export function isSameBy({
   date,
   prevDate,
   compareBy,

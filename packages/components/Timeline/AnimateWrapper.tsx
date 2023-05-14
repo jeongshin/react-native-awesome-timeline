@@ -81,6 +81,7 @@ const AnimateWrapper = ({
 
   return (
     <Animated.View
+      testID={`item-${index}`}
       style={[
         { width, flex: 1, flexDirection: 'row' },
         style,
