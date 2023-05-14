@@ -1,27 +1,38 @@
 ```ts
-interface TimelineProps<T> {
+interface TimelineProps<T>
+  extends Omit<
+      FlatListProps<T>,
+      | 'renderItem'
+      | 'data'
+      | 'horizontal'
+      | 'viewabilityConfig'
+      | 'keyExtractor'
+      | 'getItemLayout'
+    >,
+    ViewabilityConfig {
   data: T[];
 
   /**
    * sort data by date
    * @default 'desc'
    */
-  sortDateBy?: SortDateBy;
+  sortDateBy?: TimelineSortDateBy;
 
   /**
    * when to inject divider comparing previous item
    * @default 'month'
    */
-  injectDividerBy?: InjectDividerBy;
+  injectDividerBy?: TimelineInjectDividerBy;
+
+  /**
+   * ref callback
+   */
+  refCallback?: (ref: FlatList<any>) => void;
 
   /**
    * renderDivider function
    */
-  renderDivider?: (
-    date: Date,
-    // prevItem: T | undefined,
-    // nextItem: T | undefined,
-  ) => ReactElement;
+  renderDivider?: (date: Date) => ReactElement;
 
   /**
    * renderLabel function
@@ -40,8 +51,9 @@ interface TimelineProps<T> {
 
   /**
    * for rendering optimization
+   * exact size of item & divider
    */
-  fixedItemHeight?: number;
+  itemSizeForOptimization?: TimelineItemSizeConfig;
 
   /**
    * line color in hex
@@ -84,5 +96,10 @@ interface TimelineProps<T> {
    * @default #ffffff
    */
   labelPaddingColor?: string;
+
+  /**
+   * animation configuration
+   */
+  animationConfig?: TimelineAnimationConfig;
 }
 ```
