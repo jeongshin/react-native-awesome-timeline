@@ -7,7 +7,7 @@ import type {
 } from './components/Timeline';
 import { TimelineAnimationConfig } from './components/Timeline/AnimateWrapper';
 
-export namespace TimelineType {
+export declare namespace TimelineType {
   export type InjectDivider = TimelineInjectDividerBy;
   export type ItemSizeConfig = TimelineItemSizeConfig;
   export type SortDateBy = TimelineSortDateBy;

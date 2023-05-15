@@ -92,7 +92,7 @@ export default function App() {
           itemSizeForOptimization={itemSize}
           renderItem={renderItem}
           removeClippedSubviews
-          labelPaddingColor="#ff4343"
+          labelPaddingColor="#B799FF"
           labelColor="white"
           labelTopOffset={20}
           injectDividerBy="day"
